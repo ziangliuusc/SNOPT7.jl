@@ -302,7 +302,10 @@ function MOI.optimize!(model::Optimizer)
         iobj = 0
         hs   = zeros(Int,n+m)
 
-        model.workspace = SNOPT7.initialize("snopt.out","screen")
+        if (model.workspace === nothing)
+            println("In MOIWrapper: workspace is nothing.")
+            model.workspace = SNOPT7.initialize("snopt.out","screen")
+        end
 
         for (name,value) in model.options
             # Replace underscore with space

@@ -87,6 +87,7 @@ SNOPT_status = Dict(
     81=>:Insufficient_Memory,
     82=>:Insufficient_Memory,
     83=>:Insufficient_Memory,
+    84=>:Insufficient_Memory,
     91=>:Invalid_Problem_Definition,
     92=>:Invalid_Problem_Definition,
     999=>:Internal_Error)
@@ -147,10 +148,9 @@ function initialize(printfile::String, summfile::String,
     prob = snoptWorkspace(leniw, lenrw)
 
     ccall((:f_sninitx, libsnopt7), Cvoid,
-          (Ptr{UInt8}, Cint, Cint,
-           Ptr{UInt8}, Cint, Cint,
-           Ptr{Cint}, Cint, Ptr{Cdouble}, Cint),
-          printfile, plen, prob.iprint, summfile, slen, prob.isumm,
+          (Ptr{UInt8}, Cint, Ptr{UInt8}, Cint,
+          Ptr{Cint}, Cint, Ptr{Cdouble}, Cint),
+          printfile, length(printfile), summfile, length(summfile),
           prob.iw, prob.leniw, prob.rw, prob.lenrw)
     return prob
 end
