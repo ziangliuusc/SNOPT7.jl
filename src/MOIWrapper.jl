@@ -24,6 +24,7 @@ mutable struct Optimizer <: MOI.AbstractOptimizer
     options
 end
 Optimizer(;options...) = Optimizer(MOI.MIN_SENSE, nothing, [], [], nothing, 0, 0, 0, nothing, options)
+Optimizer(snopt_ws::snoptWorkspace;options...) = Optimizer(MOI.MIN_SENSE, nothing, [], [], nothing, 0, 0, 0, snopt_ws, options)
 
 function MOI.empty!(model::Optimizer)
     model.sense = MOI.MIN_SENSE
@@ -164,7 +165,6 @@ end
 
 # Solve
 function MOI.optimize!(model::Optimizer)
-
     n     = length(model.variables)
     nncon = model.nonlin !== nothing ? length(model.nonlin.constraint_bounds) : 0
     nlcon = length(model.linear_constraints)
@@ -303,7 +303,6 @@ function MOI.optimize!(model::Optimizer)
         hs   = zeros(Int,n+m)
 
         if (model.workspace === nothing)
-            println("In MOIWrapper: workspace is nothing.")
             model.workspace = SNOPT7.initialize("snopt.out","screen")
         end
 
@@ -325,7 +324,6 @@ function MOI.optimize!(model::Optimizer)
 
     else
         # Linear/quadratic objective
-
     end
 
 end
